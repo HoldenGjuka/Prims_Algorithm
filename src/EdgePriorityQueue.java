@@ -1,4 +1,3 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -11,20 +10,8 @@ public class EdgePriorityQueue {
 
     public EdgePriorityQueue(){
         heap = new ArrayList<>();
-        locations = new HashMap<>();
-    }
-
-    private void constructHeap(ArrayList<Edge> edges){
-        ArrayList<Edge> heapedEdges = new ArrayList<>();
-        if(edges.size() > 0){
-            heapedEdges.add(edges.get(0));
-        }
-
-        this.heap = heapedEdges;
-    }
-
-    public EdgePriorityQueue(ArrayList<Edge> heap) {
-        this.heap = heap;
+        Edge indexZero = new Edge(-1, -1, -1);
+        heap.add(indexZero);
         locations = new HashMap<>();
     }
 
@@ -33,7 +20,13 @@ public class EdgePriorityQueue {
     public boolean isEmpty(){ return (size() == 0); }
 
     public void add(Edge e){
-        //add an edge to the heap, making sure to update the hashmap
+        heap.add(e);
+        int insertionIndex = heap.size() - 1;
+        locations.put(e.getExternalVertex(), insertionIndex);
+    }
+
+    private void filterUp(){
+
     }
 
     /**
@@ -65,6 +58,18 @@ public class EdgePriorityQueue {
     public boolean decrease(int extVert, int intVert, int weight){
         //complicated method?
         return false;
+    }
+
+    public int getParentIndex(int childIndex){
+        return (int) (Math.floor(childIndex) / 2);
+    }
+
+    public String toString(){
+        String output = "";
+        for (int i = 1; i < heap.size(); i++) {
+            output += heap.get(i) + " ";
+        }
+        return output;
     }
 }
 
