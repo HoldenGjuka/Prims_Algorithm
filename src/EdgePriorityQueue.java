@@ -55,7 +55,6 @@ public class EdgePriorityQueue {
         int[] childrenIndices = getChildrenIndices(parentIndex);
         Edge leftChild;
         Edge rightChild;
-        Edge smallestChild;
         if(childrenIndices[0] != -1 && childrenIndices[1] != -1){
             leftChild = heap.get(childrenIndices[0]);
             rightChild = heap.get(childrenIndices[1]);
@@ -91,15 +90,11 @@ public class EdgePriorityQueue {
         Edge smallestEdge;
         if(heap.size() != 0) {
             smallestEdge = heap.get(0);
-            //heap deletion algorithm
-            //1. swap root and last element in the array
             Collections.swap(heap, 0, heap.size() - 1);
             locations.put(heap.get(0).getExternalVertex(), 0);
-            //2. Delete the last element in the array, which used to be root
             locations.remove(heap.get(heap.size() - 1).getExternalVertex());
             heap.remove(heap.size() - 1);
             locations.remove(smallestEdge.getExternalVertex());
-            //3. Filter down the new root so it's in the right spot
             if(heap.size() != 0){
                 filterDown(0);
             }
@@ -113,7 +108,7 @@ public class EdgePriorityQueue {
      * @return - An array of 2 ints, where the first is the index of the left child and the second is the index of the
      * right child. An indice will be -1 if there is no child in that spot.
      */
-    public int[] getChildrenIndices(int parentIndex){
+    private int[] getChildrenIndices(int parentIndex){
         int[] childrenIndices = {-1, -1};
         int leftChildIndex = 2 * parentIndex;
         int rightChildIndex = leftChildIndex + 1;
@@ -126,8 +121,24 @@ public class EdgePriorityQueue {
         return childrenIndices;
     }
 
+    /**
+     * This method checks if an edge can be replaced with a less "expensive" (less weight) edge, and replaces it if so.
+     * @param extVert - External vertex (not inside the Minimal Spanning Tree), used as key in locations HashMap
+     * @param intVert - Internal vertex inside the Minimal Spanning Tree
+     * @param weight - Value associated with the edge, could be seen as "distance" or "cost"
+     * @return - True if there already was an edge with that external vertex and the heap was changed, false otherwise.
+     */
     public boolean decrease(int extVert, int intVert, int weight){
-        //complicated method?
+        if(locations.containsKey(extVert)){
+            int index = locations.get(extVert);
+            Edge currentEdge = heap.get(locations.get(extVert));
+            if(currentEdge.getWeight() > weight){
+                currentEdge.setInternalVertex(intVert);
+                currentEdge.setWeight(weight);
+                System.out.println(currentEdge.toString());
+                filterUp(index);
+            }
+        } else { return false; }
         return false;
     }
 
