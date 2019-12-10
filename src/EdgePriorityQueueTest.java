@@ -49,11 +49,6 @@ public class EdgePriorityQueueTest {
     }
 
     @Test
-    public void testAdd03(){
-
-    }
-
-    @Test
     public void testRemove01(){
 
     }

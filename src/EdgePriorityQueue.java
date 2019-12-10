@@ -33,6 +33,8 @@ public class EdgePriorityQueue {
             Edge e2 = heap.get(parentIndex);
             if(e1.getWeight() < e2.getWeight()){
                 Collections.swap(heap, index, parentIndex);
+                locations.put(e1.getExternalVertex(), parentIndex);
+                locations.put(e2.getExternalVertex(), index);
                 filterUp(parentIndex);
             }
         }
@@ -43,19 +45,38 @@ public class EdgePriorityQueue {
      * @param childIndex - Index of the child Edge
      * @return - Index of the parent, -1 if the childIndex is the root
      */
-    public int getParentIndex(int childIndex){
+    private int getParentIndex(int childIndex){
         if(childIndex == 1){ return -1; }
         return (int) (Math.floor(childIndex) / 2);
     }
 
-    private void filterDown(int index){
-        Edge e1 = heap.get(index);
-        if(getParentIndex(index) != -1){
-            int parentIndex = getParentIndex(index);
-            Edge e2 = heap.get(parentIndex);
-            if(e1.getWeight() < e2.getWeight()){
-                Collections.swap(heap, index, parentIndex);
-                filterUp(parentIndex);
+    private void filterDown(int parentIndex){
+        Edge parent = heap.get(parentIndex);
+        int[] childrenIndices = getChildrenIndices(parentIndex);
+        Edge leftChild;
+        Edge rightChild;
+        Edge smallestChild;
+        if(childrenIndices[0] != -1 && childrenIndices[1] != -1){
+            leftChild = heap.get(childrenIndices[0]);
+            rightChild = heap.get(childrenIndices[1]);
+            if(leftChild.getWeight() <= rightChild.getWeight() && leftChild.getWeight() < parent.getWeight()){
+                Collections.swap(heap, childrenIndices[0], parentIndex);
+                locations.put(parent.getExternalVertex(), childrenIndices[0]);
+                locations.put(leftChild.getExternalVertex(), parentIndex);
+                filterDown(childrenIndices[0]);
+            } else if(rightChild.getWeight() < parent.getWeight()){
+                Collections.swap(heap, childrenIndices[1], parentIndex);
+                locations.put(parent.getExternalVertex(), childrenIndices[1]);
+                locations.put(rightChild.getExternalVertex(), parentIndex);
+                filterDown(childrenIndices[1]);
+            }
+        } else if(childrenIndices[0] != -1){
+            leftChild = heap.get(childrenIndices[0]);
+            if(leftChild.getWeight() < parent.getWeight()){
+                Collections.swap(heap, childrenIndices[0], parentIndex);
+                locations.put(parent.getExternalVertex(), childrenIndices[0]);
+                locations.put(leftChild.getExternalVertex(), parentIndex);
+                filterDown(childrenIndices[0]);
             }
         }
     }
@@ -67,22 +88,22 @@ public class EdgePriorityQueue {
      * @throws NoSuchElementException - If the queue is empty (there are no edges).
      */
     public Edge remove(){
-        Edge min;
+        Edge smallestEdge;
         if(heap.size() != 0) {
-            min = heap.get(0);
+            smallestEdge = heap.get(0);
             //heap deletion algorithm
             //1. swap root and last element in the array
             Collections.swap(heap, 0, heap.size() - 1);
+            locations.put(heap.get(0).getExternalVertex(), 0);
             //2. Delete the last element in the array, which used to be root
+            locations.remove(heap.get(heap.size() - 1).getExternalVertex());
             heap.remove(heap.size() - 1);
-            //update HashMap
-            locations.remove(min.getExternalVertex());
+            locations.remove(smallestEdge.getExternalVertex());
             //3. Filter down the new root so it's in the right spot
             if(heap.size() != 0){
-
+                filterDown(0);
             }
-            locations.remove(min);
-            return min;
+            return smallestEdge;
         } else throw new NoSuchElementException();
     }
 
@@ -93,9 +114,16 @@ public class EdgePriorityQueue {
      * right child. An indice will be -1 if there is no child in that spot.
      */
     public int[] getChildrenIndices(int parentIndex){
-        int[] children = {-1, -1};
-
-        return children;
+        int[] childrenIndices = {-1, -1};
+        int leftChildIndex = 2 * parentIndex;
+        int rightChildIndex = leftChildIndex + 1;
+        if(leftChildIndex <= heap.size() - 1){
+            childrenIndices[0] = leftChildIndex;
+            if(rightChildIndex <= heap.size() - 1){
+                childrenIndices[1] = rightChildIndex;
+            }
+        }
+        return childrenIndices;
     }
 
     public boolean decrease(int extVert, int intVert, int weight){
