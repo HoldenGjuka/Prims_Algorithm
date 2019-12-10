@@ -17,7 +17,7 @@ public class EdgePriorityQueue {
 
     public int size(){ return heap.size(); }
 
-    public boolean isEmpty(){ return (size() == 0); }
+    public boolean isEmpty(){ return (heap.size() == 1); }
 
     public void add(Edge e){
         heap.add(e);
