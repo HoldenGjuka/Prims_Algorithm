@@ -33,7 +33,7 @@ public class EdgePriorityQueueTest {
     }
 
     @Test
-    public void testAdd02(){
+    public void testAdd02(){  //adds a random set of edges to the edgelist, tests if the heap handles them properly
         ArrayList<Edge> edges = new ArrayList<>();
         for(int i = 0; i <= 20; i++){
             Edge newEdge = new Edge(i, i, i);
@@ -43,9 +43,8 @@ public class EdgePriorityQueueTest {
         for (int j = 0; j <= indices.length - 1; j++) {
             epq1.add(edges.get(indices[j]));
         }
-        System.out.println();
         String example = "0(0, 0) 1(1, 1) 2(2, 2) 5(5, 5) 3(3, 3) 4(4, 4) 8(8, 8) 18(18, 18) 11(11, 11) 12(12, 12) 6(6, 6) " +
-                "9(9, 9) 7(7, 7) 10(10, 10) 17(17, 17) 20(20, 20) 19(19, 19) 16(16, 16) 15(15, 15) 14(14, 14) 13(13, 13)";
+                "9(9, 9) 7(7, 7) 10(10, 10) 17(17, 17) 20(20, 20) 19(19, 19) 16(16, 16) 15(15, 15) 14(14, 14) 13(13, 13) ";
         Assert.assertEquals(example, epq1.toString());
     }
 

@@ -23,10 +23,41 @@ public class EdgePriorityQueue {
         heap.add(e);
         int insertionIndex = heap.size() - 1;
         locations.put(e.getExternalVertex(), insertionIndex);
+        filterUp(insertionIndex);
     }
 
-    private void filterUp(){
+    private void filterUp(int index){
+        Edge e1 = heap.get(index);
+        if(getParentIndex(index) != -1){
+            int parentIndex = getParentIndex(index);
+            Edge e2 = heap.get(parentIndex);
+            if(e1.getWeight() < e2.getWeight()){
+                Collections.swap(heap, index, parentIndex);
+                filterUp(parentIndex);
+            }
+        }
+    }
 
+    /**
+     * Retrieves the index of an edge's parent in the heap
+     * @param childIndex - Index of the child Edge
+     * @return - Index of the parent, -1 if the childIndex is the root
+     */
+    public int getParentIndex(int childIndex){
+        if(childIndex == 1){ return -1; }
+        return (int) (Math.floor(childIndex) / 2);
+    }
+
+    private void filterDown(int index){
+        Edge e1 = heap.get(index);
+        if(getParentIndex(index) != -1){
+            int parentIndex = getParentIndex(index);
+            Edge e2 = heap.get(parentIndex);
+            if(e1.getWeight() < e2.getWeight()){
+                Collections.swap(heap, index, parentIndex);
+                filterUp(parentIndex);
+            }
+        }
     }
 
     /**
@@ -55,13 +86,21 @@ public class EdgePriorityQueue {
         } else throw new NoSuchElementException();
     }
 
+    /**
+     * Retrieves the indices of the two children of a an edge in the heap.
+     * @param parentIndex - Index of the parent node
+     * @return - An array of 2 ints, where the first is the index of the left child and the second is the index of the
+     * right child. An indice will be -1 if there is no child in that spot.
+     */
+    public int[] getChildrenIndices(int parentIndex){
+        int[] children = {-1, -1};
+
+        return children;
+    }
+
     public boolean decrease(int extVert, int intVert, int weight){
         //complicated method?
         return false;
-    }
-
-    public int getParentIndex(int childIndex){
-        return (int) (Math.floor(childIndex) / 2);
     }
 
     public String toString(){
