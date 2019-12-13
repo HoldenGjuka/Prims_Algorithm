@@ -79,16 +79,33 @@ public class WeightedGraph {
         EdgePriorityQueue epq = new EdgePriorityQueue();
         int arbitraryVertex = 0;
         //get all edges connected to that edge
-        List<Adjacency> initialAdjacencies = graph.get(arbitraryVertex);
-        for (int i = 0; i < initialAdjacencies.size(); i++) {
-            Adjacency a = initialAdjacencies.get(i);
-            Edge e = new Edge(a.vertex, arbitraryVertex, initialAdjacencies.get(i).weight);
-            System.out.println(e);
+        List<Adjacency> adjacencies = graph.get(arbitraryVertex);
+        for (int i = 0; i < adjacencies.size(); i++) {
+            Adjacency a = adjacencies.get(i);
+            Edge e = new Edge(a.vertex, arbitraryVertex, a.weight);
+            System.out.println("Added edge to EPQ: " + e);
             epq.add(e);
         }
         Edge firstEdge = epq.remove();
         mst.add(firstEdge);
-
+        int verticesInMST = 1;
+        for (int i = verticesInMST; i < vertices.size() - 1; i++) {
+            System.out.println("i = " + i);
+            Edge priorEdge = mst.get(i - 1);
+            int v = priorEdge.getExternalVertex();
+            System.out.println("Next vertice: " + v);
+            adjacencies = graph.get(v);
+            for (int j = 0; j < adjacencies.size() - 1; j++) {
+                Adjacency a = adjacencies.get(j);
+                Edge e = new Edge(a.vertex, arbitraryVertex, a.weight);
+                if(true) {
+                    System.out.println("Added edge to EPQ: " + e);
+                    epq.decrease(e.getExternalVertex(), v, e.getWeight());
+                    epq.add(e);
+                }
+            }
+            mst.add(epq.remove());
+        }
         System.out.println("MST: " + mst);
         System.out.println("EPQ: " + epq.toString());
         return null;

@@ -20,10 +20,12 @@ public class EdgePriorityQueue {
     public boolean isEmpty(){ return (size() == 0); }
 
     public void add(Edge e){
-        heap.add(e);
-        int insertionIndex = size();
-        locations.put(e.getExternalVertex(), insertionIndex);
-        filterUp(insertionIndex);
+        if(!locations.containsKey(e.getExternalVertex())) {
+            heap.add(e);
+            int insertionIndex = size();
+            locations.put(e.getExternalVertex(), insertionIndex);
+            filterUp(insertionIndex);
+        }
     }
 
     private void filterUp(int index){
