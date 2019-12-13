@@ -17,11 +17,11 @@ public class EdgePriorityQueue {
 
     public int size(){ return heap.size() - 1; }
 
-    public boolean isEmpty(){ return (heap.size() > 0); }
+    public boolean isEmpty(){ return (size() == 0); }
 
     public void add(Edge e){
         heap.add(e);
-        int insertionIndex = heap.size() - 1;
+        int insertionIndex = size();
         locations.put(e.getExternalVertex(), insertionIndex);
         filterUp(insertionIndex);
     }
@@ -41,7 +41,7 @@ public class EdgePriorityQueue {
     }
 
     /**
-     * Retrieves the index of an edge's parent in the heap
+     * Retrieves the index of an edge's parent in the heap.
      * @param childIndex - Index of the child Edge
      * @return - Index of the parent, -1 if the childIndex is the root
      */
@@ -66,7 +66,7 @@ public class EdgePriorityQueue {
             heap.remove(size());
             locations.remove(smallestEdge.getExternalVertex());
             if(size() > 0){
-                filterDown(0);
+                filterDown(1);
             }
             return smallestEdge;
         } else throw new NoSuchElementException();
