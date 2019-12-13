@@ -22,7 +22,6 @@ public class EdgePriorityQueue {
     public void add(Edge e){
         if(!locations.containsKey(e.getExternalVertex())) {
             heap.add(e);
-            System.out.println("Added to EPQ: " + e.toString());
             int insertionIndex = size();
             locations.put(e.getExternalVertex(), insertionIndex);
             filterUp(insertionIndex);
@@ -63,7 +62,6 @@ public class EdgePriorityQueue {
         Edge smallestEdge;
         if(size() > 0) {
             smallestEdge = heap.get(1);
-            System.out.println("Smallest Edge: " + smallestEdge);
             Collections.swap(heap, 1, size());
             locations.put(heap.get(1).getExternalVertex(), 0);
             heap.remove(size());

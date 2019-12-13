@@ -72,36 +72,44 @@ public class WeightedGraph {
      * @return a list of Edges in the MST
      */
     public List<Edge> runPrims() {
-        ArrayList<Edge> mst = new ArrayList<>();
-        HashSet<Integer> verticesInMST = new HashSet<>();
-        Set<Integer> allVertices = graph.keySet();
-        System.out.println("Graph: " + graph.toString());
-        System.out.println("All Vertices: " + allVertices);
         EdgePriorityQueue epq = new EdgePriorityQueue();
-        List<Adjacency> adjacencies = graph.get(0);
-        for (int i = 0; i < adjacencies.size(); i++) {
-            Adjacency a = adjacencies.get(i);
-            Edge e = new Edge(a.vertex, 0, a.weight);
+        ArrayList<Edge> MST = new ArrayList<>();
+        int totalVertices = graph.keySet().size();
+        HashSet<Integer> mstVertices = new HashSet<>();
+        mstVertices.add(0);
+        List<Adjacency> firstVertexAdjacencies = graph.get(0);
+        for (int i = 0; i < firstVertexAdjacencies.size(); i++) {
+            Adjacency a = firstVertexAdjacencies.get(i);
+            Edge e = new Edge(a.vertex,0, a.weight);
             epq.add(e);
+            epq.decrease(a.vertex, 0, a.weight);
         }
         Edge firstEdge = epq.remove();
-        mst.add(firstEdge);
-        verticesInMST.add(0);
-        verticesInMST.add(firstEdge.getExternalVertex());
-        for (int i = 1; i < allVertices.size() - 2; i++) {
-            for (int j = 0; j < graph.keySet().size() - 1; j++) {
-                adjacencies = graph.get(j);
-                for (int k = 0; k < adjacencies.size() - 1; k++) {
-                    Adjacency a = adjacencies.get(k);
-                    Edge e = new Edge(j, a.vertex, a.weight);
-                    epq.add(e);
-                    epq.decrease(a.vertex, j, e.getWeight());
+        MST.add(firstEdge);
+        mstVertices.add(firstEdge.getExternalVertex());
+        System.out.println("EPQ after first insert: " + epq.toString());
+        for (int i = 0; i < totalVertices - 2; i++) {
+            System.out.println("Searching for a new Edge");
+            for(int j = 0; j < totalVertices; j++){
+                if(mstVertices.contains(j)) {
+                    List<Adjacency> adjacencies = graph.get(j);
+                    for (int k = 0; k < adjacencies.size(); k++) {
+                        Adjacency a = adjacencies.get(k);
+                        Edge e = new Edge(a.vertex, j, a.weight);
+                        if (!mstVertices.contains(e.getExternalVertex())) {
+                            epq.add(e);
+                            epq.decrease(a.vertex, j, a.weight);
+                        }
+                    }
                 }
             }
             Edge newEdge = epq.remove();
-            mst.add(newEdge);
-            verticesInMST.add(newEdge.getExternalVertex());
+            MST.add(newEdge);
+            mstVertices.add(newEdge.getExternalVertex());
         }
+        System.out.println(MST.toString());
+
+
         return null;
     }
 
