@@ -73,9 +73,9 @@ public class WeightedGraph {
      */
     public List<Edge> runPrims() {
         ArrayList<Edge> mst = new ArrayList<>();
-        System.out.println(graph.toString());
         Set<Integer> vertices = graph.keySet();
-        System.out.println(vertices);
+        System.out.println("Graph: " + graph.toString());
+        System.out.println("Vertices: " + vertices);
         EdgePriorityQueue epq = new EdgePriorityQueue();
         int arbitraryVertex = 0;
         //get all edges connected to that edge
@@ -88,8 +88,9 @@ public class WeightedGraph {
         }
         Edge firstEdge = epq.remove();
         mst.add(firstEdge);
-        System.out.println(mst);
-        System.out.println(epq.toString());
+
+        System.out.println("MST: " + mst);
+        System.out.println("EPQ: " + epq.toString());
         return null;
     }
 }
