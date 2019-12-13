@@ -22,6 +22,7 @@ public class EdgePriorityQueue {
     public void add(Edge e){
         if(!locations.containsKey(e.getExternalVertex())) {
             heap.add(e);
+            System.out.println("Added to EPQ: " + e.toString());
             int insertionIndex = size();
             locations.put(e.getExternalVertex(), insertionIndex);
             filterUp(insertionIndex);

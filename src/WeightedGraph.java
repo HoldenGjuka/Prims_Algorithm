@@ -78,42 +78,30 @@ public class WeightedGraph {
         System.out.println("Graph: " + graph.toString());
         System.out.println("All Vertices: " + allVertices);
         EdgePriorityQueue epq = new EdgePriorityQueue();
-        int arbitraryVertex = 0;
-        //get all edges connected to that edge
-        List<Adjacency> adjacencies = graph.get(arbitraryVertex);
+        List<Adjacency> adjacencies = graph.get(0);
         for (int i = 0; i < adjacencies.size(); i++) {
             Adjacency a = adjacencies.get(i);
-            Edge e = new Edge(a.vertex, arbitraryVertex, a.weight);
-            System.out.println("Added edge to EPQ: " + e);
+            Edge e = new Edge(a.vertex, 0, a.weight);
             epq.add(e);
         }
         Edge firstEdge = epq.remove();
         mst.add(firstEdge);
-        verticesInMST.add(arbitraryVertex);
+        verticesInMST.add(0);
         verticesInMST.add(firstEdge.getExternalVertex());
-        int numVertsInMST = 1;
-        for (int i = numVertsInMST; i < allVertices.size() - 1; i++) {
-            System.out.println("Vertices in MST: " + verticesInMST.toString());
-            System.out.println("i = " + i);
-            Edge priorEdge = mst.get(i - 1);
-            int v = priorEdge.getExternalVertex();
-            System.out.println("Next vertice: " + v);
-            adjacencies = graph.get(v);
-            for (int j = 0; j < adjacencies.size() - 1; j++) {
-                Adjacency a = adjacencies.get(j);
-                Edge e = new Edge(a.vertex, arbitraryVertex, a.weight);
-                if(!verticesInMST.contains(priorEdge.getExternalVertex()) && !verticesInMST.contains(v)) {
-                    System.out.println("Added edge to EPQ: " + e);
-                    epq.decrease(e.getExternalVertex(), v, e.getWeight());
+        for (int i = 1; i < allVertices.size() - 2; i++) {
+            for (int j = 0; j < graph.keySet().size() - 1; j++) {
+                adjacencies = graph.get(j);
+                for (int k = 0; k < adjacencies.size() - 1; k++) {
+                    Adjacency a = adjacencies.get(k);
+                    Edge e = new Edge(j, a.vertex, a.weight);
                     epq.add(e);
+                    epq.decrease(a.vertex, j, e.getWeight());
                 }
             }
             Edge newEdge = epq.remove();
             mst.add(newEdge);
             verticesInMST.add(newEdge.getExternalVertex());
         }
-        System.out.println("MST: " + mst);
-        System.out.println("EPQ: " + epq.toString());
         return null;
     }
 
