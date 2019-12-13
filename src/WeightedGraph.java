@@ -63,7 +63,6 @@ public class WeightedGraph {
      * @return a list of Edges in the MST
      */
     public List<Edge> runPrimsJdk() {
-        // TODO: implement this method
         return null;
     }
 
@@ -87,9 +86,7 @@ public class WeightedGraph {
         Edge firstEdge = epq.remove();
         MST.add(firstEdge);
         mstVertices.add(firstEdge.getExternalVertex());
-        System.out.println("EPQ after first insert: " + epq.toString());
         for (int i = 0; i < totalVertices - 2; i++) {
-            System.out.println("Searching for a new Edge");
             for(int j = 0; j < totalVertices; j++){
                 if(mstVertices.contains(j)) {
                     List<Adjacency> adjacencies = graph.get(j);
@@ -107,10 +104,7 @@ public class WeightedGraph {
             MST.add(newEdge);
             mstVertices.add(newEdge.getExternalVertex());
         }
-        System.out.println(MST.toString());
-
-
-        return null;
+        return MST;
     }
 
 }

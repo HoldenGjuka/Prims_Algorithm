@@ -11,6 +11,5 @@ public class Main {
         } catch (IOException e) {
             System.out.println("IOException in main.");
         }
-        wg.runPrims();
     }
 }

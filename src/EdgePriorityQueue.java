@@ -19,6 +19,10 @@ public class EdgePriorityQueue {
 
     public boolean isEmpty(){ return (size() == 0); }
 
+    /**
+     * Adds an edge to the heap and updates the locations HashMap.
+     * @param e - The edge being added to the heap
+     */
     public void add(Edge e){
         if(!locations.containsKey(e.getExternalVertex())) {
             heap.add(e);
@@ -28,6 +32,10 @@ public class EdgePriorityQueue {
         }
     }
 
+    /**
+     * Filters a vertice up the heap until the heap quality is true again.
+     * @param index - Index of the vertice that is being filtered up
+     */
     private void filterUp(int index){
         Edge e1 = heap.get(index);
         if(getParentIndex(index) != -1){
@@ -140,7 +148,6 @@ public class EdgePriorityQueue {
             if(currentEdge.getWeight() > weight){
                 currentEdge.setInternalVertex(intVert);
                 currentEdge.setWeight(weight);
-                System.out.println(currentEdge.toString());
                 filterUp(index);
             }
         } else { return false; }
