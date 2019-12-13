@@ -15,9 +15,9 @@ public class EdgePriorityQueue {
         locations = new HashMap<>();
     }
 
-    public int size(){ return heap.size(); }
+    public int size(){ return heap.size() - 1; }
 
-    public boolean isEmpty(){ return (heap.size() == 1); }
+    public boolean isEmpty(){ return (heap.size() > 0); }
 
     public void add(Edge e){
         heap.add(e);
@@ -50,6 +50,51 @@ public class EdgePriorityQueue {
         return (int) (Math.floor(childIndex) / 2);
     }
 
+    /**
+     * Removes the Edge object with the minimum weight using the standard heap deletion...
+     * algorithm, and then updates the locations HashMap.
+     * @return - The minimum edge object
+     * @throws NoSuchElementException - If the queue is empty (there are no edges).
+     */
+    public Edge remove(){
+        Edge smallestEdge;
+        if(size() > 0) {
+            smallestEdge = heap.get(1);
+            System.out.println("Smallest Edge: " + smallestEdge);
+            Collections.swap(heap, 1, size());
+            locations.put(heap.get(1).getExternalVertex(), 0);
+            heap.remove(size());
+            locations.remove(smallestEdge.getExternalVertex());
+            if(size() > 0){
+                filterDown(0);
+            }
+            return smallestEdge;
+        } else throw new NoSuchElementException();
+    }
+
+    /**
+     * Retrieves the indices of the two children of a an edge in the heap.
+     * @param parentIndex - Index of the parent node
+     * @return - An array of 2 ints, where the first is the index of the left child and the second is the index of the
+     * right child. An indice will be -1 if there is no child in that spot.
+     */
+    private int[] getChildrenIndices(int parentIndex){
+        int[] childrenIndices = {-1, -1};
+        int leftChildIndex = 2 * parentIndex;
+        int rightChildIndex = leftChildIndex + 1;
+        if(leftChildIndex <= size()){
+            childrenIndices[0] = leftChildIndex;
+            if(rightChildIndex <= size()){
+                childrenIndices[1] = rightChildIndex;
+            }
+        }
+        return childrenIndices;
+    }
+
+    /**
+     * Filters a vertice down the heap until it is in the proper spot (heap is true).
+     * @param parentIndex - Index of the vertice being filtered through the heap.
+     */
     private void filterDown(int parentIndex){
         Edge parent = heap.get(parentIndex);
         int[] childrenIndices = getChildrenIndices(parentIndex);
@@ -78,47 +123,6 @@ public class EdgePriorityQueue {
                 filterDown(childrenIndices[0]);
             }
         }
-    }
-
-    /**
-     * Removes the Edge object with the minimum weight using the standard heap deletion...
-     * algorithm, and then updates the locations HashMap.
-     * @return - The minimum edge object
-     * @throws NoSuchElementException - If the queue is empty (there are no edges).
-     */
-    public Edge remove(){
-        Edge smallestEdge;
-        if(heap.size() != 0) {
-            smallestEdge = heap.get(0);
-            Collections.swap(heap, 0, heap.size() - 1);
-            locations.put(heap.get(0).getExternalVertex(), 0);
-            locations.remove(heap.get(heap.size() - 1).getExternalVertex());
-            heap.remove(heap.size() - 1);
-            locations.remove(smallestEdge.getExternalVertex());
-            if(heap.size() != 0){
-                filterDown(0);
-            }
-            return smallestEdge;
-        } else throw new NoSuchElementException();
-    }
-
-    /**
-     * Retrieves the indices of the two children of a an edge in the heap.
-     * @param parentIndex - Index of the parent node
-     * @return - An array of 2 ints, where the first is the index of the left child and the second is the index of the
-     * right child. An indice will be -1 if there is no child in that spot.
-     */
-    private int[] getChildrenIndices(int parentIndex){
-        int[] childrenIndices = {-1, -1};
-        int leftChildIndex = 2 * parentIndex;
-        int rightChildIndex = leftChildIndex + 1;
-        if(leftChildIndex <= heap.size() - 1){
-            childrenIndices[0] = leftChildIndex;
-            if(rightChildIndex <= heap.size() - 1){
-                childrenIndices[1] = rightChildIndex;
-            }
-        }
-        return childrenIndices;
     }
 
     /**

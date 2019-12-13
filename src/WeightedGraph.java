@@ -26,6 +26,10 @@ public class WeightedGraph {
             vertex = v;
             weight = w;
         }
+
+        public String toString(){
+            return "(" + vertex + ", " + weight + ")";
+        }
     }
 
     /**
@@ -68,7 +72,24 @@ public class WeightedGraph {
      * @return a list of Edges in the MST
      */
     public List<Edge> runPrims() {
-        // TODO: implement this method
+        ArrayList<Edge> mst = new ArrayList<>();
+        System.out.println(graph.toString());
+        Set<Integer> vertices = graph.keySet();
+        System.out.println(vertices);
+        EdgePriorityQueue epq = new EdgePriorityQueue();
+        int arbitraryVertex = 0;
+        //get all edges connected to that edge
+        List<Adjacency> initialAdjacencies = graph.get(arbitraryVertex);
+        for (int i = 0; i < initialAdjacencies.size(); i++) {
+            Adjacency a = initialAdjacencies.get(i);
+            Edge e = new Edge(a.vertex, arbitraryVertex, initialAdjacencies.get(i).weight);
+            System.out.println(e);
+            epq.add(e);
+        }
+        Edge firstEdge = epq.remove();
+        mst.add(firstEdge);
+        System.out.println(mst);
+        System.out.println(epq.toString());
         return null;
     }
 }
